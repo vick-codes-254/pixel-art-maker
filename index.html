@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pixel Art Maker</title>
+<style>
+body { background: #1a1a1a; color: #fff; font-family: Arial; text-align: center; padding: 20px; }
+h1 { color: #6c5ce7; }
+#canvas { border: 2px solid #333; cursor: crosshair; image-rendering: pixelated; }
+.controls { margin: 20px 0; }
+.color { width: 40px; height: 40px; border: 2px solid #fff; cursor: pointer; display: inline-block; margin: 3px; }
+.actions { margin-top: 15px; }
+input[type="range"] { width: 200px; }
+button { background: #6c5ce7; color: #fff; border: none; padding: 10px 20px; cursor: pointer; margin: 5px; border-radius: 4px; }
+button:hover { background: #5a4bd1; }
+</style>
+</head>
+<body>
+<h1>🎨 Pixel Art Maker</h1>
+<div class="controls">
+  <span>Size: <span id="sizeVal">16</span></span>
+  <input type="range" id="size" min="8" max="64" value="16" step="8">
+  <span>Color: </span>
+  <div id="colors"></div>
+</div>
+<canvas id="canvas"></canvas>
+<div class="actions">
+  <button onclick="clearCanvas()">Clear</button>
+  <button onclick="toggleGrid()">Toggle Grid</button>
+  <button onclick="download()">Download PNG</button>
+</div>
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const sizeSlider = document.getElementById('size');
+const sizeVal = document.getElementById('sizeVal');
+let size = 16;
+let pixelSize = 20;
+let drawing = false;
+let currentColor = '#6c5ce7';
+let gridOn = true;
+
+const palette = ['#6c5ce7','#a29bfe','#fd79a8','#e17055','#fdcb6e','#00b894','#0984e3','#dfe6e9',
+    '#2d3436','#ffffff','#ff7675','#74b9ff','#55efc4','#ffeaa7','#e84393','#0a0a0a'];
+
+palette.forEach(c => {
+  let d = document.createElement('div');
+  d.className = 'color';
+  d.style.background = c;
+  if(c===currentColor) d.style.border = '3px solid #fff';
+  d.onclick = () => { currentColor = c; document.querySelectorAll('.color').forEach(x=>x.style.border='2px solid #fff'); d.style.border='3px solid #fff'; };
+  document.getElementById('colors').appendChild(d);
+});
+
+function initCanvas() {
+  size = parseInt(sizeSlider.value);
+  sizeVal.textContent = size;
+  pixelSize = Math.min(Math.floor(600/size),20);
+  canvas.width = size*pixelSize;
+  canvas.height = size*pixelSize;
+  drawGrid();
+}
+
+function drawGrid() {
+  ctx.fillStyle = '#1a1a1a';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  for(let i=0;i<size;i++) {
+    for(let j=0;j<size;j++) {
+      ctx.fillStyle = '#252525';
+      ctx.fillRect(i*pixelSize,j*pixelSize,pixelSize-1,pixelSize-1);
+    }
+  }
+}
+
+function getPos(e) {
+  const rect = canvas.getBoundingClientRect();
+  const x = Math.floor((e.clientX-rect.left)/pixelSize)*pixelSize;
+  const y = Math.floor((e.clientY-rect.top)/pixelSize)*pixelSize;
+  return {x,y};
+}
+
+canvas.addEventListener('mousedown', e => { drawing=true; paint(e); });
+canvas.addEventListener('mousemove', e => { if(drawing) paint(e); });
+canvas.addEventListener('mouseup', () => drawing=false);
+canvas.addEventListener('mouseleave', () => drawing=false);
+
+function paint(e) {
+  const {x,y} = getPos(e);
+  ctx.fillStyle = currentColor;
+  ctx.fillRect(x,y,pixelSize-1,pixelSize-1);
+}
+
+function clearCanvas() { drawGrid(); }
+function toggleGrid() { gridOn=!gridOn; dfs() }
+
+function dfs() {
+}
+
+function download() {
+  const link = document.createElement('a');
+  link.download = 'pixel-art.png';
+  link.href = canvas.toDataURL();
+  link.click();
+}
+
+initCanvas();
+</script>
+</body>
+</html>
