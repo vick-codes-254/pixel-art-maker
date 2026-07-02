@@ -1,20 +1,25 @@
-# Pixel Art Maker
+# Pixel Art Maker v2
 
-A simple pixel art drawing tool powered by HTML Canvas.
+A fully-featured pixel art drawing tool with layers of undo, fill, and import/export.
 
 ## Features
-- Adjustable grid size (8x8 to 64x64)
+- 4 tools: Paint, Eraser, Flood Fill, Color Picker
+- Adjustable grid from 8x8 to 64x64
 - 16-color palette
-- Click to paint pixels
-- Toggle grid overlay
+- Undo support (up to 20 states)
+- Toggleable grid overlay
 - Clear canvas
-- Download your art as PNG
+- Save project as JSON
+- Load project from JSON
+- Download as PNG
 
 ## How to Use
-1. Pick a color from the palette
-2. Click or drag on the canvas to draw
-3. Use the **Size** slider to change grid dimensions
-4. Click **Download PNG** to save your creation
+1. Select a tool (Paint, Eraser, Fill, or Picker)
+2. Pick a color from the palette
+3. Click or drag on the canvas to draw
+4. Use the size slider for grid dimensions
+5. Save/Load your work in JSON format
+6. Download as PNG when finished
 
 ## Tech
 - HTML5 Canvas
@@ -25,3 +30,6 @@ A simple pixel art drawing tool powered by HTML Canvas.
 ```
 http://localhost/pixel-art-maker
 ```
+
+## License
+MIT
